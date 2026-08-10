@@ -27,9 +27,9 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col justify-between">
+    <div className="min-h-screen text-slate-900 flex flex-col justify-between" style={{ backgroundColor: '#e2e8f0' }}>
       <Navbar onReset={handleReset} />
-      <main className="max-w-5xl mx-auto px-6 py-8 w-full flex-grow">
+      <main className="max-w-5xl mx-auto px-6 pt-8 pb-20 w-full flex-grow">
         {!weatherData ? (
           <Home onSelectLocation={handleSelectLocation} />
         ) : (

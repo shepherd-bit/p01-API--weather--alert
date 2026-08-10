@@ -3,5 +3,7 @@
 @layer base {
   body {
     font-family: 'Inter', sans-serif;
+    background-color: #f1f5f9; /* equivalent to slate-100 */
+    color: #0f172a; /* equivalent to slate-900 */
   }
 }
