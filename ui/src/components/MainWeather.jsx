@@ -1,10 +1,54 @@
-import { Sun, Wind, Droplets, Compass, Sunrise, Sunset, MapPin } from 'lucide-react';
+import { Sun, Moon, Cloud, CloudRain, CloudLightning, Wind, Droplets, Compass, Sunrise, Sunset, MapPin } from 'lucide-react';
 
 export default function MainWeather({ weatherData, selectedLocation, onReset }) {
   if (!weatherData) return null;
 
   const current = weatherData.current || {};
   const daily = weatherData.daily || {};
+  
+  const isDay = current.is_day !== 0; // Default to true if undefined
+  const weatherCode = current.weather_code ?? 0;
+
+  // Helper to map WMO weather codes and day/night state to icons and descriptions
+  const getWeatherDetails = (code, day) => {
+    switch (code) {
+      case 0:
+        return {
+          label: day ? 'Clear Sky' : 'Clear Night',
+          icon: day ? <Sun className="w-20 h-20 text-amber-400 animate-spin-slow drop-shadow-md" /> : <Moon className="w-20 h-20 text-indigo-300 drop-shadow-md" />
+        };
+      case 1:
+      case 2:
+      case 3:
+        return {
+          label: 'Partly Cloudy',
+          icon: <Cloud className="w-20 h-20 text-slate-400 drop-shadow-md animate-pulse" />
+        };
+      case 51:
+      case 53:
+      case 55:
+      case 61:
+      case 63:
+        return {
+          label: 'Rain Showers',
+          icon: <CloudRain className="w-20 h-20 text-blue-400 drop-shadow-md" />
+        };
+      case 95:
+      case 96:
+      case 99:
+        return {
+          label: 'Thunderstorm',
+          icon: <CloudLightning className="w-20 h-20 text-purple-500 drop-shadow-md" />
+        };
+      default:
+        return {
+          label: day ? 'Sunny' : 'Clear',
+          icon: day ? <Sun className="w-20 h-20 text-amber-400 animate-spin-slow drop-shadow-md" /> : <Moon className="w-20 h-20 text-indigo-300 drop-shadow-md" />
+        };
+    }
+  };
+
+  const weatherDetails = getWeatherDetails(weatherCode, isDay);
 
   return (
     <div className="bg-white rounded-3xl p-8 shadow-2xl border-4 border-slate-200 flex flex-col md:flex-row justify-between gap-6 relative overflow-hidden">
@@ -23,7 +67,7 @@ export default function MainWeather({ weatherData, selectedLocation, onReset }) 
         </div>
 
         <div className="text-xs font-bold uppercase tracking-wider text-purple-700 bg-purple-100 border-2 border-purple-200 inline-block px-3.5 py-1 rounded-full shadow-xs">
-          Clear Sky • Live Data
+          {weatherDetails.label} • Live Data
         </div>
 
         <div className="flex items-baseline gap-4 pt-2">
@@ -80,7 +124,7 @@ export default function MainWeather({ weatherData, selectedLocation, onReset }) 
       <div className="flex flex-col justify-between gap-6 md:w-80 shrink-0">
         <div className="flex items-center justify-between">
           <div className="hidden md:block"></div>
-          <Sun className="w-20 h-20 text-amber-400 animate-spin-slow drop-shadow-md" />
+          {weatherDetails.icon}
         </div>
 
         {/* Sunrise / Sunset Card */}
